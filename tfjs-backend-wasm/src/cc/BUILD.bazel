@@ -10,6 +10,28 @@ KERNELS_WITH_KEEPALIVE = glob(
     exclude = ["**/*_test.cc"],
 )
 
+DEEPAR_KERNELS_WITH_KEEPALIVE = [
+    "kernels/Add.cc",
+    "kernels/Abs.cc",
+    "kernels/FusedConv2D.cc",
+    "kernels/FusedDepthwiseConv2D.cc",
+    "kernels/PadV2.cc",
+    "kernels/Mean.cc",
+    "kernels/Conv2D.cc",
+    "kernels/Sigmoid.cc",
+    "kernels/Multiply.cc",
+    "kernels/ResizeBilinear.cc",
+    "kernels/Transpose.cc",
+    "kernels/CropAndResize.cc",
+    "kernels/RealDiv.cc",
+    "kernels/Reverse.cc",
+    "kernels/Sub.cc",
+    "kernels/StridedSlice.cc",
+    "kernels/BatchMatMul.cc",
+    "kernels/Relu.cc",
+    "kernels/_FusedMatMul.cc",
+]
+
 BASE_LINKOPTS = [
     "-s ALLOW_MEMORY_GROWTH=1",
     "-s MAXIMUM_MEMORY=4GB",
@@ -35,7 +57,7 @@ BASE_LINKOPTS = [
 # as well as tfjs-backend-wasm-simd.wasm (the output of the next build rule).
 cc_binary(
     name = "tfjs-backend-wasm.js",
-    srcs = ["backend.cc"] + KERNELS_WITH_KEEPALIVE,
+    srcs = ["backend.cc"] + DEEPAR_KERNELS_WITH_KEEPALIVE,
     additional_linker_inputs = [
         "pre.js",
         "post.js",
@@ -44,14 +66,14 @@ cc_binary(
         "-s EXPORT_NAME=WasmBackendModule",
     ],
     deps = [
-        ":all_kernels",
+        ":deepar_kernels",
         ":backend",
     ],
 )
 
 cc_binary(
     name = "tfjs-backend-wasm-simd.js",
-    srcs = ["backend.cc"] + KERNELS_WITH_KEEPALIVE,
+    srcs = ["backend.cc"] + DEEPAR_KERNELS_WITH_KEEPALIVE,
     additional_linker_inputs = [
         "pre.js",
         "post.js",
@@ -61,14 +83,14 @@ cc_binary(
     ],
     linkopts = BASE_LINKOPTS,
     deps = [
-        ":all_kernels",
+        ":deepar_kernels",
         ":backend",
     ],
 )
 
 cc_binary(
     name = "tfjs-backend-wasm-threaded-simd.js",
-    srcs = ["backend.cc"] + KERNELS_WITH_KEEPALIVE,
+    srcs = ["backend.cc"] + DEEPAR_KERNELS_WITH_KEEPALIVE,
     additional_linker_inputs = [
         "pre.js",
         "post.js",
@@ -89,7 +111,7 @@ cc_binary(
         "-s PTHREAD_POOL_SIZE=8",
     ],
     deps = [
-        ":all_kernels",
+        ":deepar_kernels",
         ":backend",
     ],
 )
@@ -456,6 +478,29 @@ tfjs_cc_library(
         ":Tile",
         ":Transform",
         ":Transpose",
+        ":_FusedMatMul",
+    ],
+)
+
+tfjs_cc_library(
+    name = "deepar_kernels",
+    deps = [
+        ":Add",
+        ":FusedConv2D",
+        ":FusedDepthwiseConv2D",
+        ":PadV2",
+        ":Conv2D",
+        ":Sigmoid",
+        ":Multiply",
+        ":ResizeBilinear",
+        ":Transpose",
+        ":CropAndResize",
+        ":RealDiv",
+        ":Reverse",
+        ":Sub",
+        ":StridedSlice",
+        ":BatchMatMul",
+        ":Relu",
         ":_FusedMatMul",
     ],
 )
