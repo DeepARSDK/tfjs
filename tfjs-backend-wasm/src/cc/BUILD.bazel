@@ -12,7 +12,9 @@ KERNELS_WITH_KEEPALIVE = glob(
 
 DEEPAR_KERNELS_WITH_KEEPALIVE = [
     "kernels/Add.cc",
+    "kernels/AddN.cc",
     "kernels/Abs.cc",
+    "kernels/DepthwiseConv2dNative.cc",
     "kernels/FusedConv2D.cc",
     "kernels/FusedDepthwiseConv2D.cc",
     "kernels/PadV2.cc",
@@ -29,6 +31,7 @@ DEEPAR_KERNELS_WITH_KEEPALIVE = [
     "kernels/StridedSlice.cc",
     "kernels/BatchMatMul.cc",
     "kernels/Relu.cc",
+    "kernels/Relu6.cc",
     "kernels/_FusedMatMul.cc",
 ]
 
@@ -486,6 +489,8 @@ tfjs_cc_library(
     name = "deepar_kernels",
     deps = [
         ":Add",
+        ":AddN",
+        ":DepthwiseConv2dNative",
         ":FusedConv2D",
         ":FusedDepthwiseConv2D",
         ":PadV2",
@@ -501,6 +506,7 @@ tfjs_cc_library(
         ":StridedSlice",
         ":BatchMatMul",
         ":Relu",
+        ":Relu6",
         ":_FusedMatMul",
     ],
 )
