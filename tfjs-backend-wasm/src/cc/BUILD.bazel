@@ -46,6 +46,7 @@ BASE_LINKOPTS = [
     "-s EXPORTED_RUNTIME_METHODS='[\"cwrap\"]'",
     "-s MODULARIZE=1",
     "-s MALLOC=emmalloc",
+    "-s INCOMING_MODULE_JS_API=wasmBinary,locateFile",
     "--pre-js $(location :pre.js)",
     "--post-js $(location :post.js)",
 ]

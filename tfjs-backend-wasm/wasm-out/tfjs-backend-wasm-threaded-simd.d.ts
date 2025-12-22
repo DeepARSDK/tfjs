@@ -30,6 +30,7 @@ export interface WasmFactoryConfig {
   instantiateWasm?: Function;
   onRuntimeInitialized?: () => void;
   onAbort?: (msg: string) => void;
+  wasmBinary?: ArrayBuffer;
 }
 
 declare var moduleFactory: (settings: WasmFactoryConfig) =>

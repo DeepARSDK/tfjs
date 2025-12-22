@@ -262,7 +262,7 @@ function createInstantiateWasmFunc(path: string) {
  */
 function getPathToWasmBinary(
     simdSupported: boolean, threadsSupported: boolean,
-    wasmModuleFolder: string) {
+    wasmModuleFolder: string) : string {
   if (wasmPath != null) {
     // If wasmPath is defined, the user has supplied a full path to
     // the vanilla .wasm binary.
@@ -278,7 +278,7 @@ function getPathToWasmBinary(
 
   if (wasmFileMap != null) {
     if (wasmFileMap[path] != null) {
-      return wasmFileMap[path];
+      return wasmFileMap[path] as string;
     }
   }
 
@@ -359,8 +359,23 @@ export async function init(): Promise<{wasm: BackendWasmModule}> {
           [`var WasmBackendModuleThreadedSimd = ` +
            wasmFactoryThreadedSimd.toString()],
           {type: 'text/javascript'});
+      const binary = wasmFileMap['tfjs-backend-wasm-threaded-simd.wasm'];
+      if(binary instanceof ArrayBuffer){
+        factoryConfig.wasmBinary = binary;
+      }
       wasm = wasmFactoryThreadedSimd(factoryConfig);
     } else {
+      if(simdSupported as boolean) {
+        const simdBinary = wasmFileMap['tfjs-backend-wasm-simd.wasm'];
+        if(simdBinary instanceof ArrayBuffer){
+          factoryConfig.wasmBinary = simdBinary;
+        }
+      } else {
+        const binary = wasmFileMap['tfjs-backend-wasm.wasm'];
+        if(binary instanceof ArrayBuffer){
+          factoryConfig.wasmBinary = binary;
+        }
+      }
       // The wasmFactory works for both vanilla and SIMD binaries.
       wasm = wasmFactory(factoryConfig);
     }
@@ -422,7 +437,7 @@ type WasmBinaryName = typeof wasmBinaryNames[number];
 
 let wasmPath: string = null;
 let wasmPathPrefix: string = null;
-let wasmFileMap: {[key in WasmBinaryName]?: string} = {};
+let wasmFileMap: {[key in WasmBinaryName]?: string | ArrayBuffer} = {};
 let initAborted = false;
 let customFetch = false;
 
@@ -477,7 +492,7 @@ export function setWasmPath(path: string, usePlatformFetch = false): void {
  * @doc {heading: 'Environment', namespace: 'wasm'}
  */
 export function setWasmPaths(
-    prefixOrFileMap: string|{[key in WasmBinaryName]?: string},
+    prefixOrFileMap: string|{[key in WasmBinaryName]?: string | ArrayBuffer},
     usePlatformFetch = false): void {
   if (initAborted) {
     throw new Error(
