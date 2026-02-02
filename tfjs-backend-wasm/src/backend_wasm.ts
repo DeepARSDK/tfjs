@@ -408,6 +408,9 @@ export async function init(): Promise<{wasm: BackendWasmModule}> {
                 module.cwrap('dispose_data', voidReturnType, ['number']),
             dispose: module.cwrap('dispose', voidReturnType, []),
           };
+          if(module.wasmBinary) {
+            module.wasmBinary = null;
+          }
 
           resolve({wasm: module});
         })

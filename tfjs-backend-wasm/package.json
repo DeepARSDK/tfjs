@@ -1,6 +1,6 @@
 {
   "name": "@tensorflow/tfjs-backend-wasm",
-  "version": "4.22.0-shopar-minimal-2",
+  "version": "4.22.0-shopar-minimal-3",
   "main": "dist/tf-backend-wasm.node.js",
   "types": "dist/index.d.ts",
   "repository": {
